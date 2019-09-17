@@ -6,7 +6,6 @@ import { matchPropTypes } from '../components/Title'
 import withContext from '../withContext'
 import moment from 'moment'
 import SelectDropDown from '../components/forms/Select'
-import { css } from 'emotion'
 
 class TimeSlots extends Component {
   constructor(props) {
@@ -85,7 +84,8 @@ class TimeSlots extends Component {
     }
 
     var timeStops = []
-
+    
+    // eslint-disable-next-line
     var index = 0
 
     while (startTime <= endTime) {
