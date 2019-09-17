@@ -28,6 +28,7 @@ jobs:
     continueOnError: "true"
     displayName: Running Cypress tests
   - task: PublishTestResults@2
+    condition: succeededOrFailed()
     inputs:
       testRunner: JUnit
       testResultsFiles: '**/test-output-*.xml' 
