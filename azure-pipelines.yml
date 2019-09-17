@@ -24,7 +24,7 @@ jobs:
   pool:
     vmImage: 'Ubuntu-16.04'
   steps:
-  - script: RAZZLE_CONNECTION_STRING='mystringurl' docker-compose up --exit-code-from e2e
+  - script: RAZZLE_CONNECTION_STRING='http://sab-database.dev.esdc.online' docker-compose up --exit-code-from e2e
     continueOnError: "true"
     displayName: Running Cypress tests
   - task: PublishTestResults@2
