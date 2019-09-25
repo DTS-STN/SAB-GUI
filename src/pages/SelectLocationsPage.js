@@ -138,7 +138,9 @@ class SelectlocationsPage extends React.Component {
       .then(locs => {
         if (locs) {
           this.setState({
-            provLocations: locs.data,
+            provLocations: locs.data.sort(function (a, b) {
+              return a.name.localeCompare(b.name);
+            }),
             cityLocations: [],
             cityName: null,
             locationNumber: null,
