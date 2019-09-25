@@ -139,6 +139,7 @@ class SelectlocationsPage extends React.Component {
         if (locs) {
           this.setState({
             provLocations: locs.data.sort(function (a, b) {
+              //Using localeCompare in case names contain special symbols
               return a.name.localeCompare(b.name);
             }),
             cityLocations: [],
