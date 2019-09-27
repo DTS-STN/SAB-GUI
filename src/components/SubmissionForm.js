@@ -6,6 +6,8 @@ import rightArrow from '../assets/rightArrow.svg'
 import { BottomContainer, arrow } from '../styles'
 import { Trans } from '@lingui/react'
 
+const emailTemplateID = "16b5c121-1234-4e29-83af-d4e9ce43f594"
+
 const SubmissionForm = props => {
   const { sending, onSubmit } = props
   return (
@@ -17,7 +19,7 @@ const SubmissionForm = props => {
         <input type="hidden" name="location" value={props.location} />
         <input type="hidden" name="selectedDay" value={props.selectedDays} />
         <input type="hidden" name="selectedTime" value={props.selectedTime} />
-        <input type="hidden" name="templateId" value="af563da5-43bd-4b9a-9610-e3990a7f4315" />
+        <input type="hidden" name="templateId" value={emailTemplateID} />
 
         <Button type="submit" disabled={sending}>
           <Trans>Send request</Trans>{' '}
