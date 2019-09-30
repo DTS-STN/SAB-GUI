@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/named
 import { sendNotification } from './sendmail';
 import { logerror } from '../utils/logger';
 
