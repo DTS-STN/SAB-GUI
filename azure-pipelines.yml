@@ -36,6 +36,7 @@ jobs:
   
 - job: Publish_Artifact
   dependsOn: Cypress_tests
+  condition: Succeeded()
   pool:
     vmImage: 'Ubuntu-16.04'
   steps:
@@ -51,6 +52,7 @@ jobs:
 
 - job: Deploy_Jenkins
   dependsOn: Publish_Artifact
+  condition: Succeeded()
   steps:
   - task: JenkinsQueueJob@2
     inputs:
