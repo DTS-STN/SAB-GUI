@@ -411,7 +411,12 @@ class SelectlocationsPage extends React.Component {
                     </fieldset>
                   </div>
 
-                  <Button id='nextButton' type="submit" value="Submit" onClick={this.submit}>
+                  <Button
+                    id="nextButton"
+                    type="submit"
+                    value="Submit"
+                    onClick={this.submit}
+                  >
                     {' '}
                     <Trans>Next</Trans>{' '}
                     <img src={rightArrow} className={landingArrow} alt="" />
@@ -433,5 +438,4 @@ SelectlocationsPage.propTypes = {
   ...matchPropTypes,
   history: PropTypes.any,
 }
-
 export default withContext(SelectlocationsPage)
