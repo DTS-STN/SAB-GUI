@@ -1,5 +1,4 @@
 import express from 'express'
-import http from 'http'
 import cookieParser from 'cookie-parser'
 import { getStoreCookie } from './cookies'
 import { render } from '@jaredpalmer/after'
@@ -16,9 +15,9 @@ import {
   cspConfig,
 } from './utils/serverUtils'
 import gitHash from './utils/gitHash'
-import { handleSubmitEmail } from './email/handleSubmitEmail'
-import { logError, logDebug } from './utils/logger'
 import emailRoutes from './routes/email.routes'
+import appointmentRoutes from './routes/appointment.routes'
+import locationRoutes from './routes/location.routes'
 
 checkEnvironmentVariables()
 
@@ -28,7 +27,6 @@ const assets = require(process.env.RAZZLE_ASSETS_MANIFEST ||
 
 const server = express()
 const helmet = require('helmet')
-const apiHost = process.env.CONNECTION_STRING
 
 server
   .use(helmet()) // sets security-focused headers: https://helmetjs.github.io/
@@ -43,96 +41,8 @@ server
   .use(bodyParser.urlencoded({ extended: false }))
   .use(bodyParser.json())
   .use(emailRoutes)
-  .post('/submit', handleSubmitEmail)
-  .get('/locations/:province', (req, res) => {
-    let data = ''
-    let province = req.params.province
-    http
-      .get(`${apiHost}/locationsbyprov/${province}`, resp => {
-        logDebug(`STATUS: ${resp.statusCode}`)
-        logDebug(`HEADERS: ${JSON.stringify(resp.headers)}`)
-        resp.on('data', chunk => {
-          data += chunk
-          res.status(200).send(data)
-        })
-      })
-      .on('error', err => {
-        logError(
-          'Something went wrong when calling the API in locations/province: ' +
-            err.message,
-        )
-        res.status(503).send()
-      })
-  })
-  .get('/locations/:province/:city', (req, res) => {
-    let data = ''
-    let province = req.params.province
-    let city = req.params.city || ''
-    http
-      .get(`${apiHost}/locationsbyprov/${province}/${city}`, resp => {
-        logDebug(`STATUS: ${resp.statusCode}`)
-        logDebug(`HEADERS: ${JSON.stringify(resp.headers)}`)
-        resp.on('data', chunk => {
-          data += chunk
-          res.status(200).send(data)
-        })
-      })
-      .on('error', err => {
-        logError(
-          'Something went wrong when calling the API in locations/province/city: ' +
-            err.message,
-        )
-        res.status(503).send()
-      })
-  })
-  .get('/appointments/:locationID', (req, res) => {
-    let data = ''
-    let locationID = req.params.locationID
-    let day = req.query.day
-    http
-      .get(`${apiHost}/appointments/${locationID}?day=${day}`, resp => {
-        logDebug(`STATUS: ${resp.statusCode}`)
-        logDebug(`HEADERS: ${JSON.stringify(resp.headers)}`)
-        resp.on('data', chunk => {
-          data += chunk
-          res.status(200).send(data)
-        })
-      })
-      .on('error', err => {
-        logError(
-          'Something went wrong when calling the API appointments/locationID/city:  ' +
-            err.message,
-        )
-        res.status(503).send()
-      })
-  })
-  .post('/appointments/temp', (req, res) => {
-    let data = JSON.stringify(req.body)
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': data.length,
-      },
-    }
-    let postReq = http
-      .request(`${apiHost}/appointments/temp`, options, resp => {
-        logDebug(`STATUS: ${resp.statusCode}`)
-        logDebug(`HEADERS: ${JSON.stringify(resp.headers)}`)
-        resp.on('data', respData => {
-          res.status(200).send(respData)
-        })
-      })
-      .on('error', err => {
-        logError(
-          'Something went wrong when calling the API appointments/temp:  ' +
-            err.message,
-        )
-        res.status(503).send()
-      })
-    postReq.write(data)
-    postReq.end()
-  })
+  .use(appointmentRoutes)
+  .use(locationRoutes)
   .get('/clear', (req, res) => {
     let language = getStoreCookie(req.cookies, 'language') || 'en'
     res.clearCookie('store')
