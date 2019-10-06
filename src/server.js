@@ -18,6 +18,7 @@ import {
 import gitHash from './utils/gitHash'
 import { handleSubmitEmail } from './email/handleSubmitEmail'
 import { logError, logDebug } from './utils/logger'
+import emailRoutes from './routes/email.routes'
 
 checkEnvironmentVariables()
 
@@ -41,6 +42,7 @@ server
   .use(cookieParser())
   .use(bodyParser.urlencoded({ extended: false }))
   .use(bodyParser.json())
+  .use(emailRoutes)
   .post('/submit', handleSubmitEmail)
   .get('/locations/:province', (req, res) => {
     let data = ''
