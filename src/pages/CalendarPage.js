@@ -281,7 +281,6 @@ class CalendarPage extends Component {
             this.props.match.path.slice(1),
             values,
           )
-          console.log(this.props.context.store)
         })
         .catch(err => {
           this.props.history.push('/error')
