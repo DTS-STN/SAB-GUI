@@ -139,6 +139,7 @@ class CalendarPage extends Component {
     this.submitTempAppointment = this.submitTempAppointment.bind(this)
     this.hasNotValid = this.hasNotValid.bind(this)
     this.updateTime = this.updateTime.bind(this)
+    this.checkAccessibility = this.checkAccessibility.bind(this)
     this.form = null
     this.state = {
       month: initialMonth(this.props),
@@ -206,6 +207,14 @@ class CalendarPage extends Component {
     })
   }
 
+  checkAccessibility(value) {
+    if (value && value[0] === 'yes') {
+      return true
+    } else {
+      return false
+    }
+  }
+
   submitTempAppointment() {
     let values = {
       ...this.props.context.store,
@@ -223,7 +232,7 @@ class CalendarPage extends Component {
       // bioKitId: String,
       bil: values.register.paperFileNumber,
       date: date,
-      privateAccessible: false,
+      privateAccessible: this.checkAccessibility(values.register.accessibility),
     }
     return axios.post(`/appointments/temp`, appointment)
   }
