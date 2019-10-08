@@ -113,7 +113,7 @@ export const RegistrationFields = {
   paperFileNumber: 'required|paper_file_number',
   email: `required|email`,
   emailConfirm: 'required|email|same:email',
-  accessibility: 'present',
+  accessibility: 'accept_anything',
 }
 
 export const LandingFields = {

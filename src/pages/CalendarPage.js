@@ -281,6 +281,7 @@ class CalendarPage extends Component {
             this.props.match.path.slice(1),
             values,
           )
+          console.log(this.props.context.store)
         })
         .catch(err => {
           this.props.history.push('/error')
@@ -291,12 +292,7 @@ class CalendarPage extends Component {
 
   render() {
     let {
-      context: {
-        store: {
-          calendar = {},
-          language: locale = 'en',
-        } = {},
-      } = {},
+      context: { store: { calendar = {}, language: locale = 'en' } = {} } = {},
     } = this.props
 
     // we aren't going to check for a no-js submission because currently nothing happens when someone presses "review request"
