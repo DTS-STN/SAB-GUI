@@ -56,10 +56,11 @@ const EmailError = () => {
 class ConfirmationPage extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { sending: false, comfirmNum: [] }
+    this.state = { sending: false, comfirmNum: null, loading: true }
     this.handleSubmit = this.handleSubmit.bind(this)
     // eslint-disable-next-line no-console
     console.log(this.props)
+    
     this.getEmailNum(this.props.context.store.calendar.tempAppointment._id)
   }
 
@@ -76,6 +77,7 @@ class ConfirmationPage extends React.Component {
   }
 
   getEmailNum(documentId) {
+    
     console.log(documentId)
     axios
       .get(`/appointments/confirm/${documentId}`)
@@ -83,6 +85,7 @@ class ConfirmationPage extends React.Component {
         console.log(locs)
         this.setState({
           comfirmNum: locs.data.confirmation,
+          loading: false,
         })
       })
       .catch(function() {
@@ -128,7 +131,9 @@ class ConfirmationPage extends React.Component {
         } = {},
       } = {},
     } = this.props
-
+    if (this.state.loading === true){
+      return null
+    }
     // this.getEmailNum(_id)
     console.log(_id)
     console.log(this.state.comfirmNum)
