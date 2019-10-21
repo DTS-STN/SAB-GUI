@@ -39,20 +39,6 @@ class ReviewPage extends React.Component {
       return <Trans>No</Trans>
     }
   }
-  // from: stackoverflow 'generate a hash from string...'
-  // hashFromData(email, paperFileNumber) {
-  //   var hash = 0,
-  //     i,
-  //     chr
-  //   const keys = email + paperFileNumber
-  //   if (keys.length === 0) return hash
-  //   for (i = 0; i < keys.length; i++) {
-  //     chr = keys.charCodeAt(i)
-  //     hash = (hash << 5) - hash + chr
-  //     hash |= 0
-  //   }
-  //   return hash
-  // }
   render() {
     let {
       context: {
@@ -72,10 +58,6 @@ class ReviewPage extends React.Component {
         } = {},
       } = {},
     } = this.props
-    // eslint-disable-next-line no-console
-    console.log(this.props)
-    console.log(JSON.stringify(this.props))
-    console.log('ID: ' + _id)
     const { sending } = this.state
     let days = []
     if (selectedDays) {
@@ -102,25 +84,6 @@ class ReviewPage extends React.Component {
             selectedDays={days}
             selectedTime={selectedTime}
           />
-          {/* Note: if updating this text don't forget to update the email templates */}
-          {/* <Reminder>
-            {explanationPage ? (
-              <Trans>
-                You should plan to attend your existing appointment until we
-                contact you. This may take 1 week.
-              </Trans>
-            ) : (
-              <React.Fragment>
-                <Trans>
-                  Sending this request will cancel your current appointment.
-                </Trans>{' '}
-                <strong>
-                  <Trans> Do not attend your old appointment</Trans>
-                </strong>{' '}
-                <Trans>after you send this request.</Trans>
-              </React.Fragment>
-            )}
-          </Reminder> */}
           <SubmissionForm
             hashFromData={_id}
             email={email}
