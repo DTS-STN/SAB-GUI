@@ -108,10 +108,6 @@ server
   })
 
 
-  .get('/appointments/:confirm/:documentId', (req, res) => {
-    let data = ''
-    let documentId = req.params.documentId
-
     http
       .get(`${apiHost}/appointments/confirm/${documentId}`, resp => {
         logDebug(`STATUS: ${resp.statusCode}`)
