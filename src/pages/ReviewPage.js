@@ -14,6 +14,7 @@ import { dateToISODateString } from '../components/Time'
 import FocusedH1 from '../components/FocusedH1'
 import { ReportButton } from '../components/forms/ReportButton'
 import DateModified from '../components/DateModified'
+
 const contentClass = css`
   p {
     padding-bottom: ${theme.spacing.lg};
@@ -28,6 +29,7 @@ class ReviewPage extends React.Component {
     super(props)
     this.state = { sending: false }
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.deleteTempAppointment = this.deleteTempAppointment.bind(this)
   }
   handleSubmit() {
     this.setState({ sending: true })
@@ -38,7 +40,12 @@ class ReviewPage extends React.Component {
     } else {
       return <Trans>No</Trans>
     }
-  }
+ }
+
+  deleteTempAppointment() {
+    let tempAppointment = this.props.context.store.calendar.tempAppointment
+    return axios.delete(`/appointments/temp/delete/${tempAppointment._id}`)
+
   render() {
     let {
       context: {
@@ -83,6 +90,7 @@ class ReviewPage extends React.Component {
             location={locationCity + ', ' + locationAddress}
             selectedDays={days}
             selectedTime={selectedTime}
+            timeDateChangeHandler={this.deleteTempAppointment}
           />
           <SubmissionForm
             hashFromData={_id}
