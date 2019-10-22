@@ -84,9 +84,6 @@ class ConfirmationPage extends React.Component {
           comfirmNum: locs.data.confirmation,
         })
       })
-      .catch(function() {
-        this.props.history.push('/error')
-      })
   }
 
 
