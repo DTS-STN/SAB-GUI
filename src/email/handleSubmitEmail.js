@@ -1,5 +1,5 @@
 import { sendNotification } from './sendmail'
-import { logDebug, logError, logerror } from '../utils/logger'
+import { logDebug, logError } from '../utils/logger'
 import http from 'http'
 
 const apiHost = process.env.CONNECTION_STRING
