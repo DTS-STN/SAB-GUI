@@ -76,8 +76,7 @@ export const handleSubmitEmail = async (req, res) => {
       return res.redirect('/confirmation')
     })
   } else {
-    // eslint-disable-next-line no-console
-    console.log(`Unknown Email Template ID ${input.templateId || 'empty'}`)
+    
     return res.redirect('/error')
   }
 }

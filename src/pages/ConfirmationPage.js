@@ -14,6 +14,8 @@ import { dateToISODateString } from '../components/Time'
 import Confirmation from '../components/Confirmation'
 import { ReportButton } from '../components/forms/ReportButton'
 import DateModified from '../components/DateModified'
+import PropTypes from 'prop-types'
+
 
 import axios from 'axios'
 
@@ -56,10 +58,8 @@ const EmailError = () => {
 class ConfirmationPage extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { sending: false }
+    this.state = { sending: false, loading: false }
     this.handleSubmit = this.handleSubmit.bind(this)
-    // eslint-disable-next-line no-console
-    console.log(this.props)
     this.getEmailNum(this.props.context.store.calendar.tempAppointment._id)
   }
 
@@ -81,11 +81,17 @@ class ConfirmationPage extends React.Component {
       .get(`/appointments/confirm/${documentId}`)
       .then(locs => {
         this.setState({
+          loading: true,
           comfirmNum: locs.data.confirmation,
-        })
+        }) 
+        
+      })
+      .catch(() => {
+        this.props.history.push('/error')
+
       })
   }
-
+  
 
   hasEmailError() {
     const { match } = this.props
@@ -123,6 +129,10 @@ class ConfirmationPage extends React.Component {
           return new Date(dateToISODateString(day))
         }),
       )
+    }
+
+    if (!this.state.loading){
+      return null
     }
 
     return (
@@ -189,6 +199,7 @@ class ConfirmationPage extends React.Component {
 ConfirmationPage.propTypes = {
   ...contextPropTypes,
   ...matchPropTypes,
+  history: PropTypes.any,
 }
 
 export default withContext(ConfirmationPage)
