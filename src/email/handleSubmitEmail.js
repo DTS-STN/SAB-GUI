@@ -17,12 +17,7 @@ export const getEmailConfirm = (documentId, cb) => {
       })
       resp.on('end', function() {
         data = JSON.parse(data)
-        // eslint-disable-next-line no-console
-        console.log('here1')
-        
         cb(null, data.confirmation)
-        // console.log('here1')
-        // console.log(data)
       })
     })
     .on('error', err => {

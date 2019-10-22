@@ -59,8 +59,6 @@ class ReviewPage extends React.Component {
         } = {},
       } = {},
     } = this.props
-    // eslint-disable-next-line no-console
-    console.log(this.props)
   
     const { sending } = this.state
     let days = []
