@@ -36,7 +36,7 @@ class ReviewPage extends React.Component {
     this.setState({ sending: true })
   }
   translateReason(reason) {
-    if (reason[0] && reason[0] === 'yes') {
+    if (reason && reason[0] === 'yes') {
       return <Trans>Yes</Trans>
     } else {
       return <Trans>No</Trans>
