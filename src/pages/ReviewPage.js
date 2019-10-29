@@ -36,7 +36,7 @@ class ReviewPage extends React.Component {
     this.setState({ sending: true })
   }
   translateReason(reason) {
-    if (reason && reason === 'yes') {
+    if (reason[0] && reason[0] === 'yes') {
       return <Trans>Yes</Trans>
     } else {
       return <Trans>No</Trans>
@@ -90,9 +90,7 @@ class ReviewPage extends React.Component {
           <Summary
             paperFileNumber={paperFileNumber}
             email={email}
-            accessibility={this.translateReason(
-              accessibility !== undefined ? accessibility[0] : 'No',
-            )}
+            accessibility={this.translateReason(accessibility)}
             location={locationCity + ', ' + locationAddress}
             selectedDays={days}
             selectedTime={selectedTime}
