@@ -2,5 +2,8 @@
   "semi": false,
   "parser": "babylon",
   "singleQuote": true,
-  "trailingComma": "all"
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "arrowParens": "avoid",
+  "tabWidth": 2
 }
