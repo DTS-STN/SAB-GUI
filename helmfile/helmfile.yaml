@@ -23,7 +23,7 @@ environments:
 releases:
 #SAB GUI
   - name: sab-gui-{{ .Environment.Name }}
-    chart: dts/dts-sab
+    chart: dtssab/dts-sab
     version: 0.2.9
     values:
       - overrides/gui/values.yaml.gotmpl
@@ -34,17 +34,15 @@ releases:
     namespace: sab-{{ .Environment.Name }}
     installed: true
     wait: false
-    recreatePods: true
-    force: false
 
 
   #SAB ADMIN
 
   - name: sab-admin-{{ .Environment.Name }}
-    chart: dts/dts-sab
+    chart: dtssab/dts-sab
     version: 0.2.4
     values:
-      - charts/sab/admin/values.yaml.gotmpl
+      - overrides/admin/values.yaml.gotmpl
     labels:
         category: mts
         app: sab-admin
@@ -52,17 +50,15 @@ releases:
     namespace: sab-{{ .Environment.Name }}
     installed: true
     wait: false
-    recreatePods: true
-    force: false
 
 
   # SAB-Database
 
   - name: sab-database-api-{{ .Environment.Name }}
-    chart: dts/mts-nodejs
+    chart: dtssab/dts-sab-api
     version: 1.7.1
     values:
-      - charts/sab/database/values.yaml.gotmpl
+      - overrides/database/values.yaml.gotmpl
     labels:
         category: mts
         app: sab
@@ -70,15 +66,13 @@ releases:
     namespace: sab-{{ .Environment.Name }}
     installed: true
     wait: false
-    recreatePods: true
-    force: false
 
 
   - name: sab-database-{{ .Environment.Name }}
-    chart: dts/dts-mongodb
+    chart: dtssab/sab-mongodb
     version: 7.8.8
     values:
-      - charts/sab/database/mongodb-values.yaml.gotmpl   
+      - overrides/database/mongodb-values.yaml.gotmpl   
     labels:
         category: mts
         app: sab
@@ -86,5 +80,3 @@ releases:
     namespace: sab-{{ .Environment.Name }}
     installed: true
     wait: false
-    recreatePods: true
-    force: true

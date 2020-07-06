@@ -38,20 +38,6 @@ ingress:
       annotations: {}
       # kubernetes.io/ingress.class: traefik
 {{ if or (eq .Environment.Name "prod-blue") (eq .Environment.Name "prod-green") }}
-mtsdisk:
-    enabled: true
-    name: sab-monogodb-{{ .Environment.Name }}
-    pvcname: sab-mogodb-pvc
-    type: azuredisk
-    size: 100Gi
-    diskname: Sab-MongoDB-{{ .Environment.Name }}
-    fullname: sab-mongodb-{{ .Environment.Name }}-disk
-    uri: "{{ requiredEnv "JIRA_PGSQL_DISK_URI" }}Sab-MongoDB-{{ .Environment.Name }}" 
-{{ else }}
-mtsdisk:
-    enabled: false
-applicationPort: 4000
-{{ end }}
 livenessProbePath: /locations
 readinessProbePath: /locations
 dataseed:
@@ -67,7 +53,7 @@ dataseed:
     password: {{ requiredEnv "SAB_DB_PASS" }}
   git:
     branchname: master
-    user: gocmts
+    user: dtsrobot
     password: "{{ requiredEnv "GITHUB_TOKEN" }}"
     repo: github.com/MTS-STM/SAB-Database
   workdir: SAB-Database
@@ -76,7 +62,8 @@ dataseed:
   - name: DROP_COLLECTION 
     value: "true"
 dynatrace:
-  enabled: true
+  enabled: false
   environmentId: zzo80629
   paasToken: c6jwfhSLQD-4It0KO2uoj
   options: 
+{{ end }}

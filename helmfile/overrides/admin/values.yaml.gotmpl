@@ -1,7 +1,7 @@
 image:
-  repository: mtscontainers.azurecr.io/sab-admin
+  repository: mtscontainers.azurecr.io/sab-database
 {{ if or (eq .Environment.Name "prod-blue") (eq .Environment.Name "prod-green") (eq .Environment.Name "dev")}}
-  tag: "{{ requiredEnv "SAB_ADMIN_DOCKER_TAG" }}"
+  tag: "{{ requiredEnv "DOCKER_TAG" }}"
 {{ else }}
   tag: latest
 {{ end }}

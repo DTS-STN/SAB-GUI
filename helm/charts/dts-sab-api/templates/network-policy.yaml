@@ -1,0 +1,36 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "node.fullname" . }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "node.name" . }}
+      chart: {{ template "node.chart" . }}
+      release: "{{ .Release.Name }}"
+      heritage: "{{ .Release.Service }}"
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+        {{- range $key, $value := .Values.networkPolicy.ingressPodMatchLabels }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }} 
+    ports:
+    - protocol: TCP
+      port: http
+    egress:
+    - to:
+      - podSelector:
+          matchLabels:
+          {{- range $key, $value := .Values.networkPolicy.egressPodMatchLabels }}
+          {{ $key }}: {{ $value | quote }}
+          {{- end }} 
+      ports:
+      - protocol: TCP
+        port: 27017
+{{ end }}

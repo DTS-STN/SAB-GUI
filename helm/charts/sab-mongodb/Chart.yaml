@@ -1,0 +1,20 @@
+apiVersion: v1
+name: sab-mongodb
+version: 7.8.8
+appVersion: 4.2.3
+description: Forked from stable/mongodb 7.8.7
+keywords:
+- mongodb
+- database
+- nosql
+- cluster
+- replicaset
+- replication
+home: https://mongodb.org
+icon: https://bitnami.com/assets/stacks/mongodb/img/mongodb-stack-220x234.png
+sources:
+- https://github.com/bitnami/bitnami-docker-mongodb
+maintainers:
+- name: Bitnami
+  email: containers@bitnami.com
+engine: gotpl
