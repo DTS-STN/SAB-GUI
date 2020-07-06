@@ -1,0 +1,31 @@
+image:
+  repository: mtscontainers.azurecr.io/sab-gui
+{{ if or (eq .Environment.Name "prod-blue") (eq .Environment.Name "prod-green") (eq .Environment.Name "dev")}}
+  tag: "{{ requiredEnv "DOCKER_TAG" }}"
+{{ else }}
+  tag: latest
+{{ end }}
+  pullPolicy: Always
+extraEnv:
+  - name: CONNECTION_STRING
+    value: "http://sab-database-api-{{ .Environment.Name }}-mts-nodejs"  
+  - name: NOTIFICATION_API_BASE_URL
+    value: "https://api.notification.alpha.canada.ca"  
+  - name: NOTIFICATION_API_KEY
+    value: "{{ requiredEnv "SAB_NOTIFICATION_API_KEY" }}"  
+ingress:
+      enabled: true
+      hosts:
+      {{ if or (eq .Environment.Name "prod-blue") (eq .Environment.Name "prod-green") }}
+        - sab.{{ requiredEnv "BASE_DOMAIN" }}
+      {{ end }}      
+        - sab.{{ .Environment.Name }}.{{ requiredEnv "BASE_DOMAIN" }}
+      annotations: {}
+      # kubernetes.io/ingress.class: traefik
+livenessDelay: 180
+readinessDelay: 180
+dynatrace:
+  enabled: false
+  environmentId: zzo80629
+  paasToken: c6jwfhSLQD-4It0KO2uoj
+  options: 

@@ -1,0 +1,90 @@
+repositories:
+    - name: dts
+      url: https://helm.dts-stn.com
+    # helm-git powered repository: You can treat any Git repository as a charts repository
+    - name: dtssab
+      url: git+https://{{ requiredEnv "GITHUB_USER" }}:{{ requiredEnv "GITHUB_TOKEN" }}@github.com/DTS-STN/sab-gui@helm/charts?ref=helmfile
+{{- if or (eq .Environment.Name "prod-blue") (eq .Environment.Name "prod-green") }}    
+context: EsDCDTSRG-K8S
+{{ else }}
+context: EsDCDTSDevRG-K8S
+{{ end }}
+   
+environments:
+    benrd: 
+    kylerd:
+    adamrd:
+    marcusrd:
+    ericrd:
+    dev:
+    prod-blue:
+    prod-green: 
+
+releases:
+#SAB GUI
+  - name: sab-gui-{{ .Environment.Name }}
+    chart: dts/dts-sab
+    version: 0.2.9
+    values:
+      - overrides/gui/values.yaml.gotmpl
+    labels:
+        category: mts
+        app: sab
+        tier: frontend
+    namespace: sab-{{ .Environment.Name }}
+    installed: true
+    wait: false
+    recreatePods: true
+    force: false
+
+
+  #SAB ADMIN
+
+  - name: sab-admin-{{ .Environment.Name }}
+    chart: dts/dts-sab
+    version: 0.2.4
+    values:
+      - charts/sab/admin/values.yaml.gotmpl
+    labels:
+        category: mts
+        app: sab-admin
+        tier: frontend
+    namespace: sab-{{ .Environment.Name }}
+    installed: true
+    wait: false
+    recreatePods: true
+    force: false
+
+
+  # SAB-Database
+
+  - name: sab-database-api-{{ .Environment.Name }}
+    chart: dts/mts-nodejs
+    version: 1.7.1
+    values:
+      - charts/sab/database/values.yaml.gotmpl
+    labels:
+        category: mts
+        app: sab
+        tier: middle
+    namespace: sab-{{ .Environment.Name }}
+    installed: true
+    wait: false
+    recreatePods: true
+    force: false
+
+
+  - name: sab-database-{{ .Environment.Name }}
+    chart: dts/dts-mongodb
+    version: 7.8.8
+    values:
+      - charts/sab/database/mongodb-values.yaml.gotmpl   
+    labels:
+        category: mts
+        app: sab
+        tier: database
+    namespace: sab-{{ .Environment.Name }}
+    installed: true
+    wait: false
+    recreatePods: true
+    force: true

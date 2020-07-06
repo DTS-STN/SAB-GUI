@@ -1,0 +1,37 @@
+image:
+  repository: mtscontainers.azurecr.io/sab-admin
+{{ if or (eq .Environment.Name "prod-blue") (eq .Environment.Name "prod-green") (eq .Environment.Name "dev")}}
+  tag: "{{ requiredEnv "SAB_ADMIN_DOCKER_TAG" }}"
+{{ else }}
+  tag: latest
+{{ end }}
+  pullPolicy: Always
+extraEnv:
+  - name: REACT_APP_CONNECTION_STRING
+    value: "http://sab-database-api-{{ .Environment.Name }}-mts-nodejs"  
+  - name: REACT_APP_APPLICATION_ID
+    value: "{{ requiredEnv "REACT_APP_APPLICATION_ID" }}"  
+  - name: REACT_APP_REDIRECT_URI
+    value: "https://sab-admin.{{ .Environment.Name }}}.{{ requiredEnv "BASE_DOMAIN" }}/"  
+  - name: REACT_APP_TENANT
+    value: "sabadminb2c.onmicrosoft.com"  
+  - name: REACT_APP_SIGNIN_POLICY
+    value: "B2C_1_SAB-Admin-login"  
+  - name: REACT_APP_SCOPE
+    value: "https://sabadminb2c.onmicrosoft.com/api/user_impersonation" 
+  - name: NOTIFICATION_API_BASE_URL
+    value: "https://api.notification.alpha.canada.ca"  
+  - name: NOTIFICATION_API_KEY
+    value: "{{ requiredEnv "SAB_NOTIFICATION_API_KEY" }}"  
+ingress:
+      enabled: true
+      hosts:
+      {{ if or (eq .Environment.Name "prod-blue") (eq .Environment.Name "prod-green") }}
+        - sab-admin.{{ requiredEnv "BASE_DOMAIN" }}
+      {{ end }}      
+        - sab-admin.{{ .Environment.Name }}.{{ requiredEnv "BASE_DOMAIN" }}
+      annotations: {}
+      # kubernetes.io/ingress.class: traefik
+port: 80
+livenessDelay: 60
+readinessDelay: 60
