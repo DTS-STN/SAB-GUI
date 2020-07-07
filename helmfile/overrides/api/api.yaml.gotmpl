@@ -8,26 +8,17 @@ image:
 {{ end }}
   pullPolicy: Always
 backofflimit: 4
-
 extraEnv:
   - name: MONGO_USER 
     value: sabadmin
   - name: MONGO_PASSWORD 
     value: {{ requiredEnv "SAB_DB_PASS" }}    
   - name: MONGO_URI
-    value: sab-database-{{ .Environment.Name }}-dts-mongodb 
+    value: sab-database-{{ .Environment.Name }}-sab-mongodb 
   - name: MONGO_PORT 
     value: "27017"
   - name: MONGO_DATABASE 
     value: locations
-
-mongodb:
-    {{ if or (eq .Environment.Name "prod-blue") (eq .Environment.Name "prod-green") }}
-    persistence:
-        enabled: true
-        existingClaim: sab-mongodb-pvc
-    {{ end }}
-    connectionString: notusedanymore
 ingress:
       enabled: false
       hosts:
@@ -37,7 +28,6 @@ ingress:
         - sab-database.{{ .Environment.Name }}.{{ requiredEnv "BASE_DOMAIN" }}
       annotations: {}
       # kubernetes.io/ingress.class: traefik
-{{ if or (eq .Environment.Name "prod-blue") (eq .Environment.Name "prod-green") }}
 livenessProbePath: /locations
 readinessProbePath: /locations
 dataseed:
@@ -46,7 +36,7 @@ dataseed:
     repository: mtscontainers.azurecr.io/dtsnodejs
     tag: 0.1.4
   mongo:
-    uri: sab-database-{{ .Environment.Name }}-dts-mongodb
+    uri: sab-database-{{ .Environment.Name }}-sab-mongodb
     database: locations
     port: "27017"
     user: sabadmin
@@ -61,9 +51,3 @@ dataseed:
   extraEnv:
   - name: DROP_COLLECTION 
     value: "true"
-dynatrace:
-  enabled: false
-  environmentId: zzo80629
-  paasToken: c6jwfhSLQD-4It0KO2uoj
-  options: 
-{{ end }}

@@ -7,8 +7,10 @@ mongodbRootPassword: {{ requiredEnv "SAB_DB_ROOT_PASS" }}
 connectionString: 'mongodb://sabadmin:{{ requiredEnv "SAB_DB_PASS" }}@sab-database-{{ .Environment.Name }}-mongodb/locations?retryWrites=true&authSource=locations&w=1'
 image:
     tag: 4.2
-dynatrace:
-  enabled: false
-  environmentId: zzo80629
-  paasToken: c6jwfhSLQD-4It0KO2uoj
-  options: 
+persistence:
+  enabled: true
+  {{- if or (eq .Environment.Name "prod-blue") (eq .Environment.Name "prod-green") }}
+  storageClass: dtsstorageclass
+  {{- else }}
+  storageClass: dtsstorageclass-dev
+  {{- end }}

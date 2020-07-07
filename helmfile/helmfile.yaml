@@ -28,7 +28,7 @@ releases:
     values:
       - overrides/gui/values.yaml.gotmpl
     labels:
-        category: mts
+        category: dts
         app: sab
         tier: frontend
     namespace: sab-{{ .Environment.Name }}
@@ -44,7 +44,7 @@ releases:
     values:
       - overrides/admin/values.yaml.gotmpl
     labels:
-        category: mts
+        category: dts
         app: sab-admin
         tier: frontend
     namespace: sab-{{ .Environment.Name }}
@@ -52,29 +52,29 @@ releases:
     wait: false
 
 
-  # SAB-Database
+  # SAB-API
 
   - name: sab-database-api-{{ .Environment.Name }}
     chart: dtssab/dts-sab-api
     version: 1.7.2
     values:
-      - overrides/database/values.yaml.gotmpl
+      - overrides/api/api.yaml.gotmpl
     labels:
-        category: mts
+        category: dts
         app: sab
         tier: middle
     namespace: sab-{{ .Environment.Name }}
     installed: true
     wait: false
 
-
+  # SAB Database
   - name: sab-database-{{ .Environment.Name }}
     chart: dtssab/sab-mongodb
     version: 7.8.8
     values:
       - overrides/database/mongodb-values.yaml.gotmpl   
     labels:
-        category: mts
+        category: dts
         app: sab
         tier: database
     namespace: sab-{{ .Environment.Name }}
