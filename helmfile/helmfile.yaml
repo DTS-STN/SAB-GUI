@@ -40,7 +40,7 @@ releases:
 
   - name: sab-admin-{{ .Environment.Name }}
     chart: dtssab/dts-sab
-    version: 0.2.4
+    version: 0.2.9
     values:
       - overrides/admin/values.yaml.gotmpl
     labels:
@@ -56,7 +56,7 @@ releases:
 
   - name: sab-database-api-{{ .Environment.Name }}
     chart: dtssab/dts-sab-api
-    version: 1.7.1
+    version: 1.7.2
     values:
       - overrides/database/values.yaml.gotmpl
     labels:
