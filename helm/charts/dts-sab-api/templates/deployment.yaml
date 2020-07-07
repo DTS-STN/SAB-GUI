@@ -1,0 +1,89 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "node.fullname" . }}
+  labels:
+    app: {{ template "node.name" . }}
+    chart: {{ template "node.chart" . }}
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "node.name" . }}
+      release: "{{ .Release.Name }}"
+  replicas: {{ .Values.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "node.name" . }}
+        chart: {{ template "node.chart" . }}
+        release: {{ .Release.Name | quote }}
+        heritage: "{{ .Release.Service }}"
+    spec:
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end}}
+      {{- end }}
+      containers:
+      - name: {{ template "node.fullname" . }}
+        image: "{{ template "node.image" . }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        env:
+        - name: GITREPO 
+          value: {{ .Values.git.repository }}
+        - name: GITPROJECT 
+          value: {{ .Values.git.project }}
+        - name: GITUSER 
+          value: {{ .Values.git.user }}
+        - name: GITPASSWORD
+          value: {{ .Values.git.password }}
+        - name: LAUNCHFILE 
+          value: {{ .Values.git.launchfile }}
+        - name: CONNECTION_STRING
+          value: {{ .Values.mongodb.connectionString }}
+        - name: COLLECTION
+          value: {{ .Values.mongodb.collection }}
+        - name: BRANCHNAME
+          value: {{ .Values.git.branchName }}
+        - name: PORT
+          value: {{ .Values.applicationPort | quote }}
+        - name: DATA_FOLDER
+          value: "/app"
+{{- if .Values.extraEnv }}
+{{ toYaml .Values.extraEnv | indent 8 }}
+{{- end }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.applicationPort }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.livenessProbePath }}
+            port: http
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.readinessProbePath }}
+            port: http
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        volumeMounts:
+        - name: app
+          mountPath: /app
+        - name: data
+          mountPath: {{ .Values.persistence.path }}
+      volumes:
+      - name: app
+        emptyDir: {}
+      - name: data
+      {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ template "fullname" . }}
+      {{- else }}
+        emptyDir: {}
+      {{- end }}

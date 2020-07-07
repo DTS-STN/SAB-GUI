@@ -1,0 +1,53 @@
+image:
+  registry: mtscontainers.azurecr.io
+  repository: sab-database
+{{ if or (eq .Environment.Name "prod-blue") (eq .Environment.Name "prod-green") (eq .Environment.Name "dev")}}
+  tag: "{{ requiredEnv "DOCKER_TAG" }}"
+{{ else }}
+  tag: latest
+{{ end }}
+  pullPolicy: Always
+backofflimit: 4
+extraEnv:
+  - name: MONGO_USER 
+    value: sabadmin
+  - name: MONGO_PASSWORD 
+    value: {{ requiredEnv "SAB_DB_PASS" }}    
+  - name: MONGO_URI
+    value: sab-database-{{ .Environment.Name }}-sab-mongodb 
+  - name: MONGO_PORT 
+    value: "27017"
+  - name: MONGO_DATABASE 
+    value: locations
+ingress:
+      enabled: false
+      hosts:
+      {{ if or (eq .Environment.Name "prod-blue") (eq .Environment.Name "prod-green") }}
+        - sab-database.{{ requiredEnv "BASE_DOMAIN" }}
+      {{ end }}      
+        - sab-database.{{ .Environment.Name }}.{{ requiredEnv "BASE_DOMAIN" }}
+      annotations: {}
+      # kubernetes.io/ingress.class: traefik
+livenessProbePath: /locations
+readinessProbePath: /locations
+dataseed:
+  enabled: true
+  image:
+    repository: mtscontainers.azurecr.io/dtsnodejs
+    tag: 0.1.4
+  mongo:
+    uri: sab-database-{{ .Environment.Name }}-sab-mongodb
+    database: locations
+    port: "27017"
+    user: sabadmin
+    password: {{ requiredEnv "SAB_DB_PASS" }}
+  git:
+    branchname: master
+    user: dtsrobot
+    password: "{{ requiredEnv "GITHUB_TOKEN" }}"
+    repo: github.com/MTS-STM/SAB-Database
+  workdir: SAB-Database
+  startcommand: npm install && npm run csv:import
+  extraEnv:
+  - name: DROP_COLLECTION 
+    value: "true"

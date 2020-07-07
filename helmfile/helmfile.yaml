@@ -1,0 +1,82 @@
+repositories:
+    - name: dts
+      url: https://helm.dts-stn.com
+    # helm-git powered repository: You can treat any Git repository as a charts repository
+    - name: dtssab
+      url: git+https://{{ requiredEnv "GITHUB_USER" }}:{{ requiredEnv "GITHUB_TOKEN" }}@github.com/DTS-STN/sab-gui@helm/charts?ref=helmfile
+{{- if or (eq .Environment.Name "prod-blue") (eq .Environment.Name "prod-green") }}    
+context: EsDCDTSRG-K8S
+{{ else }}
+context: EsDCDTSDevRG-K8S
+{{ end }}
+   
+environments:
+    benrd: 
+    kylerd:
+    adamrd:
+    marcusrd:
+    ericrd:
+    dev:
+    prod-blue:
+    prod-green: 
+
+releases:
+#SAB GUI
+  - name: sab-gui-{{ .Environment.Name }}
+    chart: dtssab/dts-sab
+    version: 0.2.9
+    values:
+      - overrides/gui/values.yaml.gotmpl
+    labels:
+        category: dts
+        app: sab
+        tier: frontend
+    namespace: sab-{{ .Environment.Name }}
+    installed: true
+    wait: false
+
+
+  #SAB ADMIN
+
+  - name: sab-admin-{{ .Environment.Name }}
+    chart: dtssab/dts-sab
+    version: 0.2.9
+    values:
+      - overrides/admin/values.yaml.gotmpl
+    labels:
+        category: dts
+        app: sab-admin
+        tier: frontend
+    namespace: sab-{{ .Environment.Name }}
+    installed: true
+    wait: false
+
+
+  # SAB-API
+
+  - name: sab-database-api-{{ .Environment.Name }}
+    chart: dtssab/dts-sab-api
+    version: 1.7.2
+    values:
+      - overrides/api/api.yaml.gotmpl
+    labels:
+        category: dts
+        app: sab
+        tier: middle
+    namespace: sab-{{ .Environment.Name }}
+    installed: true
+    wait: false
+
+  # SAB Database
+  - name: sab-database-{{ .Environment.Name }}
+    chart: dtssab/sab-mongodb
+    version: 7.8.8
+    values:
+      - overrides/database/mongodb-values.yaml.gotmpl   
+    labels:
+        category: dts
+        app: sab
+        tier: database
+    namespace: sab-{{ .Environment.Name }}
+    installed: true
+    wait: false

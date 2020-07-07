@@ -1,0 +1,45 @@
+{{- if .Values.dataseed.enabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "node.fullname" . }}
+  labels:
+    app: {{ template "node.name" . }}
+    chart: {{ template "node.chart" . }}
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  template:
+    spec:
+      containers:
+        - name: sab-db-init
+          image: {{ .Values.dataseed.image.repository }}:{{ .Values.dataseed.image.tag }}
+          env:
+          - name: MONGO_URI
+            value: {{ .Values.dataseed.mongo.uri }}
+          - name: MONGO_DATABASE
+            value:  {{ .Values.dataseed.mongo.database }}
+          - name: MONGO_PORT
+            value:  {{ .Values.dataseed.mongo.port | quote }}
+          - name: MONGO_USER
+            value:  {{ .Values.dataseed.mongo.user }}
+          - name: MONGO_PASSWORD
+            value:  {{ .Values.dataseed.mongo.password }}
+          - name: BRANCHNAME
+            value:  {{ .Values.dataseed.git.branchname }}
+          - name: GITUSER
+            value:  {{ .Values.dataseed.git.user }}
+          - name: GITPASSWORD
+            value: {{ .Values.dataseed.git.password }}
+          - name: GITREPO
+            value: {{ .Values.dataseed.git.repo }}
+          - name: WORKDIR
+            value: {{ .Values.dataseed.workdir }}
+          - name: STARTCOMMAND
+            value: {{ .Values.dataseed.startcommand }}                  
+{{- if .Values.dataseed.extraEnv }}
+{{ toYaml .Values.dataseed.extraEnv | indent 10 }}
+{{- end }}
+      restartPolicy: Never
+  backoffLimit: {{ .Values.backofflimit }}
+  {{ end }}
