@@ -46,7 +46,7 @@ releases:
     labels:
         category: dts
         app: sab-admin
-        tier: frontend
+        tier: admin
     namespace: sab-{{ .Environment.Name }}
     installed: true
     wait: false
