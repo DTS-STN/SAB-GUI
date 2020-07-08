@@ -2,7 +2,8 @@ pipeline {
     agent any
     parameters {
         string(name: 'DOCKER_TAG', defaultValue: 'latest', description: 'Version of docker image')
-        string(name: 'TIER', defaultValue: 'frontend', description: 'Target portion of application: frontend,admin,middle,database')
+        string(name: 'TIER', defaultValue: 'frontend', description: 'Portion of application: frontend,admin,middle,database')
+        string(name: 'TARGET', defaultValue: 'dev', description: 'Target environment of application: dev,staging,etc')
     }
     environment {
         JENKINS_SPN     = credentials('JENKINS_SPN_ID')
@@ -16,7 +17,7 @@ pipeline {
                sh '''
                     cd ./helmfile
                     . ./context-dev.sh > /dev/null
-                    helmfile --environment dev --selector tier=$TIER apply
+                    helmfile --environment $TARGET --selector tier=$TIER apply
                 '''
             }
         }
