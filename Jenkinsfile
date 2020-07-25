@@ -18,7 +18,14 @@ pipeline {
                     cd ./helmfile
                     echo "Setting Environment Secrets. This is obfuscated"
                     set +x
-                    . ./context-dev.sh > /dev/null
+                    if [ "$TARGET" = "prod-blue" ] || [ "$TARGET"= "prod-green" ]
+                        then
+                        echo "Prod"
+                        . ./context-prod.sh > /dev/null
+                    else
+                        echo "Dev"
+                        . ./context-dev.sh > /dev/null
+                    fi
                     set -x
                     echo "Done."
                     helmfile --environment $TARGET --selector tier=$TIER apply
