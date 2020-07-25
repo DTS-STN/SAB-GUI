@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Logging in to Dev K8 Cluster.."
-az aks get-credentials --resource-group EsDCDTSDevRG --name EsDCDTSDevRG-K8S
+az aks get-credentials --resource-group EsDCDTSRG --name EsDCDTSRG-K8S
 echo "Done."
 
 # Since we didn't get these from the createSPN script, we have to fetch them now.
