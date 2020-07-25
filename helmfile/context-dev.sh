@@ -8,7 +8,7 @@ if [ -z "$DOCKER_TAG" ]
 then
     export DOCKER_TAG=latest
 fi
-export BASE_DOMAIN=dts-stn.dev
+export BASE_DOMAIN=dts-stn.com
 export GITHUB_USER=$(az keyvault secret show --vault-name DTSSecrets --name dts-github-user --query value -otsv)
 export GITHUB_TOKEN=$(az keyvault secret show --vault-name DTSSecrets --name dts-github-token --query value -otsv)
 export SAB_NOTIFICATION_API_KEY=$(az keyvault secret show --vault-name DTSSecrets --name dts-dev-sab-api-notification-key --query value -otsv)
