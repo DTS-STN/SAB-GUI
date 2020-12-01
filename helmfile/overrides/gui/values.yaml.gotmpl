@@ -18,8 +18,9 @@ ingress:
       hosts:
       {{ if or (eq .Environment.Name "prod-blue") (eq .Environment.Name "prod-green") }}
         - sab.{{ requiredEnv "BASE_DOMAIN" }}
-      {{ end }}      
         - sab.{{ .Environment.Name }}.{{ requiredEnv "BASE_DOMAIN" }}
+      {{ end }}      
+        - sab.{{ .Environment.Name }}.{{ requiredEnv "BASE_DOMAIN_DEV" }}
       annotations: {}
       # kubernetes.io/ingress.class: traefik
 livenessDelay: 180
