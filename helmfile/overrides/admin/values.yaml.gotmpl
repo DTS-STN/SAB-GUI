@@ -28,8 +28,9 @@ ingress:
       hosts:
       {{ if or (eq .Environment.Name "prod-blue") (eq .Environment.Name "prod-green") }}
         - sab-admin.{{ requiredEnv "BASE_DOMAIN" }}
-      {{ end }}      
         - sab-admin.{{ .Environment.Name }}.{{ requiredEnv "BASE_DOMAIN" }}
+      {{ end }}      
+        - sab-admin.{{ .Environment.Name }}.{{ requiredEnv "BASE_DOMAIN_DEV" }}
       annotations: {}
       # kubernetes.io/ingress.class: traefik
 port: 80
